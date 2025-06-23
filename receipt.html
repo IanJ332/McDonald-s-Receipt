@@ -182,6 +182,21 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             position: sticky;
             top: 20px;
+            width: 350px;
+        }
+
+        .receipt-header-image {
+            text-align: center;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 10px;
+        }
+
+        .receipt-header-image img {
+            max-width: 100%;
+            height: auto;
+            max-height: 80px;
+            object-fit: contain;
         }
 
         .receipt-header {
@@ -270,7 +285,7 @@
 
                 <div class="form-group">
                     <label for="storeAddress">Store Address:</label>
-                    <input type="text" id="storeAddress" value="123 Main Street, Your City" placeholder="123 Main Street, Your City">
+                    <input type="text" id="storeAddress" value="10207 Lakewood Blvd, Downey" placeholder="10207 Lakewood Blvd, Downey">
                 </div>
 
                 <div class="form-group">
@@ -280,7 +295,7 @@
 
                 <div class="form-group">
                     <label for="cashier">Cashier:</label>
-                    <input type="text" id="cashier" value="Sarah" placeholder="Cashier Name">
+                    <input type="text" id="cashier" value="Ronald McDonald" placeholder="Cashier Name">
                 </div>
 
                 <div class="form-group">
@@ -333,17 +348,17 @@
 
             <div class="receipt-section">
                 <div class="receipt" id="receiptPreview">
-                    <div class="receipt-header">
+                    <div class="receipt-header" id="receiptHeader">
                         <div class="receipt-logo">McDonald's</div>
                         <div>McDonald's Restaurant #1234</div>
                         <div>123 Main Street, Your City</div>
                         <div>Tel: (555) 123-4567</div>
                     </div>
                     
-                    <div style="margin: 10px 0;">
+                    <div id="receiptOrderInfo" style="margin: 10px 0;">
                         <div>Order #: 12345</div>
                         <div>Cashier: Sarah</div>
-                        <div id="receiptDateTime">Date: 2025-06-23 Time: 12:30</div>
+                        <div>Date: 2025-06-23 Time: 12:30</div>
                     </div>
 
                     <div class="receipt-items" id="receiptItems">
@@ -383,7 +398,7 @@
                     </div>
                 </div>
                 
-                <button class="download-btn" onclick="downloadReceipt()">💾 Download Receipt</button>
+                <button class="download-btn" onclick="downloadReceipt()">💾 Download Receipt as PNG</button>
             </div>
         </div>
 
@@ -391,6 +406,8 @@
             <p>🎁 Create memorable gifts with custom McDonald's receipts | For entertainment purposes only</p>
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <script>
         // Set current date and time
@@ -409,6 +426,7 @@
                 <button class="remove-item" onclick="removeItem(this)">✕</button>
             `;
             container.appendChild(itemRow);
+            generateReceipt(); // Update receipt when new item is added
         }
 
         function removeItem(button) {
@@ -431,16 +449,15 @@
             const specialMessage = document.getElementById('specialMessage').value;
 
             // Update receipt header
-            document.querySelector('.receipt-header').innerHTML = `
+            document.getElementById('receiptHeader').innerHTML = `
                 <div class="receipt-logo">McDonald's</div>
                 <div>${storeName}</div>
                 <div>${storeAddress}</div>
                 <div>Tel: (555) 123-4567</div>
             `;
 
-            // Update order info
-            document.getElementById('receiptDateTime').textContent = `Date: ${date} Time: ${time}`;
-            document.querySelector('.receipt').children[1].innerHTML = `
+            // Update order info - *** THIS WAS THE MAIN BUG FIX ***
+            document.getElementById('receiptOrderInfo').innerHTML = `
                 <div>Order #: ${orderNumber}</div>
                 <div>Cashier: ${cashier}</div>
                 <div>Date: ${date} Time: ${time}</div>
@@ -486,28 +503,28 @@
         }
 
         function downloadReceipt() {
-            const receipt = document.getElementById('receiptPreview');
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
+            const receiptElement = document.getElementById('receiptPreview');
             
-            // Simple text-based download (creating a text file)
-            const receiptText = receipt.innerText;
-            const blob = new Blob([receiptText], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'mcdonalds_receipt.txt';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
+            // Use html2canvas to render the receipt div as a PNG
+            html2canvas(receiptElement, {
+                // Improve image quality slightly
+                scale: 2, 
+                backgroundColor: null, // Use the element's background
+            }).then(canvas => {
+                const a = document.createElement('a');
+                a.href = canvas.toDataURL('image/png');
+                a.download = 'mcdonalds-receipt.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
         }
 
         // Auto-generate receipt on form changes
         document.addEventListener('input', generateReceipt);
         
-        // Initial generation
-        generateReceipt();
+        // Initial generation on page load
+        window.addEventListener('DOMContentLoaded', generateReceipt);
     </script>
 </body>
 </html>
