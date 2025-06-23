@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>McDonald's Receipt Generator | Creative Gift Customization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #ffcc02;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="70" r="1" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+        }
+
+        .header h1 {
+            color: #d63031;
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            color: #2d3436;
+            font-size: 1.1em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .form-section {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        .form-section h2 {
+            color: #2d3436;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d3436;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #ff6b35;
+        }
+
+        .items-section {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .item-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .item-row input[type="text"] {
+            flex: 2;
+        }
+
+        .item-row input[type="number"] {
+            flex: 1;
+        }
+
+        .remove-item {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .add-item {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.3s;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .receipt-section {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .receipt {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px;
+        }
+
+        .receipt-header {
+            text-align: center;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .receipt-logo {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffcc02;
+            background: #d63031;
+            padding: 5px 15px;
+            border-radius: 15px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .receipt-items {
+            margin: 15px 0;
+        }
+
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .receipt-total {
+            border-top: 1px dashed #333;
+            padding-top: 10px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .download-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .footer {
+            background: #2d3436;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .receipt-section {
+                max-width: 100%;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍟 McDonald's Receipt Generator</h1>
+            <p>Create custom McDonald's receipts as creative gifts and memorable keepsakes</p>
+        </div>
+
+        <div class="main-content">
+            <div class="form-section">
+                <h2>📝 Customize Your Receipt</h2>
+                
+                <div class="form-group">
+                    <label for="storeName">Store Name:</label>
+                    <input type="text" id="storeName" value="McDonald's Restaurant #1234" placeholder="McDonald's Restaurant #1234">
+                </div>
+
+                <div class="form-group">
+                    <label for="storeAddress">Store Address:</label>
+                    <input type="text" id="storeAddress" value="123 Main Street, Your City" placeholder="123 Main Street, Your City">
+                </div>
+
+                <div class="form-group">
+                    <label for="orderNumber">Order Number:</label>
+                    <input type="text" id="orderNumber" value="12345" placeholder="12345">
+                </div>
+
+                <div class="form-group">
+                    <label for="cashier">Cashier:</label>
+                    <input type="text" id="cashier" value="Sarah" placeholder="Cashier Name">
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="date" id="date">
+                </div>
+
+                <div class="form-group">
+                    <label for="time">Time:</label>
+                    <input type="time" id="time">
+                </div>
+
+                <div class="items-section">
+                    <h3>🍔 Menu Items</h3>
+                    <div id="itemsContainer">
+                        <div class="item-row">
+                            <input type="text" placeholder="Item Name" value="Big Mac">
+                            <input type="number" placeholder="Qty" value="1" min="1">
+                            <input type="number" placeholder="Price" value="5.99" step="0.01" min="0">
+                            <button class="remove-item" onclick="removeItem(this)">✕</button>
+                        </div>
+                        <div class="item-row">
+                            <input type="text" placeholder="Item Name" value="Large Fries">
+                            <input type="number" placeholder="Qty" value="1" min="1">
+                            <input type="number" placeholder="Price" value="2.99" step="0.01" min="0">
+                            <button class="remove-item" onclick="removeItem(this)">✕</button>
+                        </div>
+                        <div class="item-row">
+                            <input type="text" placeholder="Item Name" value="Coca-Cola Large">
+                            <input type="number" placeholder="Qty" value="1" min="1">
+                            <input type="number" placeholder="Price" value="1.99" step="0.01" min="0">
+                            <button class="remove-item" onclick="removeItem(this)">✕</button>
+                        </div>
+                    </div>
+                    <button class="add-item" onclick="addItem()">+ Add Item</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="tax">Tax Rate (%):</label>
+                    <input type="number" id="tax" value="8.25" step="0.01" min="0" max="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="specialMessage">Special Message (Optional):</label>
+                    <textarea id="specialMessage" rows="3" placeholder="Happy Birthday! 🎉 or any special message..."></textarea>
+                </div>
+
+                <button class="generate-btn" onclick="generateReceipt()">🎨 Generate Receipt</button>
+            </div>
+
+            <div class="receipt-section">
+                <div class="receipt" id="receiptPreview">
+                    <div class="receipt-header">
+                        <div class="receipt-logo">McDonald's</div>
+                        <div>McDonald's Restaurant #1234</div>
+                        <div>123 Main Street, Your City</div>
+                        <div>Tel: (555) 123-4567</div>
+                    </div>
+                    
+                    <div style="margin: 10px 0;">
+                        <div>Order #: 12345</div>
+                        <div>Cashier: Sarah</div>
+                        <div id="receiptDateTime">Date: 2025-06-23 Time: 12:30</div>
+                    </div>
+
+                    <div class="receipt-items" id="receiptItems">
+                        <div class="receipt-item">
+                            <span>Big Mac x1</span>
+                            <span>$5.99</span>
+                        </div>
+                        <div class="receipt-item">
+                            <span>Large Fries x1</span>
+                            <span>$2.99</span>
+                        </div>
+                        <div class="receipt-item">
+                            <span>Coca-Cola Large x1</span>
+                            <span>$1.99</span>
+                        </div>
+                    </div>
+
+                    <div class="receipt-total">
+                        <div class="receipt-item">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">$10.97</span>
+                        </div>
+                        <div class="receipt-item">
+                            <span>Tax:</span>
+                            <span id="taxAmount">$0.90</span>
+                        </div>
+                        <div class="receipt-item" style="font-size: 14px; font-weight: bold;">
+                            <span>TOTAL:</span>
+                            <span id="total">$11.87</span>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 15px; padding-top: 10px; border-top: 1px dashed #333;">
+                        <div>Thank you for choosing McDonald's!</div>
+                        <div>Have a great day! 😊</div>
+                        <div id="specialMessageDisplay" style="margin-top: 10px; font-weight: bold;"></div>
+                    </div>
+                </div>
+                
+                <button class="download-btn" onclick="downloadReceipt()">💾 Download Receipt</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🎁 Create memorable gifts with custom McDonald's receipts | For entertainment purposes only</p>
+        </div>
+    </div>
+
+    <script>
+        // Set current date and time
+        const now = new Date();
+        document.getElementById('date').value = now.toISOString().split('T')[0];
+        document.getElementById('time').value = now.toTimeString().split(' ')[0].substring(0, 5);
+
+        function addItem() {
+            const container = document.getElementById('itemsContainer');
+            const itemRow = document.createElement('div');
+            itemRow.className = 'item-row';
+            itemRow.innerHTML = `
+                <input type="text" placeholder="Item Name" value="">
+                <input type="number" placeholder="Qty" value="1" min="1">
+                <input type="number" placeholder="Price" value="0.00" step="0.01" min="0">
+                <button class="remove-item" onclick="removeItem(this)">✕</button>
+            `;
+            container.appendChild(itemRow);
+        }
+
+        function removeItem(button) {
+            const container = document.getElementById('itemsContainer');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+            generateReceipt();
+        }
+
+        function generateReceipt() {
+            // Update store info
+            const storeName = document.getElementById('storeName').value;
+            const storeAddress = document.getElementById('storeAddress').value;
+            const orderNumber = document.getElementById('orderNumber').value;
+            const cashier = document.getElementById('cashier').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const taxRate = parseFloat(document.getElementById('tax').value) || 0;
+            const specialMessage = document.getElementById('specialMessage').value;
+
+            // Update receipt header
+            document.querySelector('.receipt-header').innerHTML = `
+                <div class="receipt-logo">McDonald's</div>
+                <div>${storeName}</div>
+                <div>${storeAddress}</div>
+                <div>Tel: (555) 123-4567</div>
+            `;
+
+            // Update order info
+            document.getElementById('receiptDateTime').textContent = `Date: ${date} Time: ${time}`;
+            document.querySelector('.receipt').children[1].innerHTML = `
+                <div>Order #: ${orderNumber}</div>
+                <div>Cashier: ${cashier}</div>
+                <div>Date: ${date} Time: ${time}</div>
+            `;
+
+            // Update items
+            const itemRows = document.querySelectorAll('.item-row');
+            const receiptItems = document.getElementById('receiptItems');
+            receiptItems.innerHTML = '';
+
+            let subtotal = 0;
+            itemRows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                const itemName = inputs[0].value;
+                const qty = parseInt(inputs[1].value) || 1;
+                const price = parseFloat(inputs[2].value) || 0;
+                const itemTotal = qty * price;
+                subtotal += itemTotal;
+
+                if (itemName) {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'receipt-item';
+                    itemDiv.innerHTML = `
+                        <span>${itemName} x${qty}</span>
+                        <span>$${itemTotal.toFixed(2)}</span>
+                    `;
+                    receiptItems.appendChild(itemDiv);
+                }
+            });
+
+            // Update totals
+            const tax = (subtotal * taxRate) / 100;
+            const total = subtotal + tax;
+
+            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('taxAmount').textContent = `$${tax.toFixed(2)}`;
+            document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+
+            // Update special message
+            const messageDisplay = document.getElementById('specialMessageDisplay');
+            messageDisplay.textContent = specialMessage;
+            messageDisplay.style.display = specialMessage ? 'block' : 'none';
+        }
+
+        function downloadReceipt() {
+            const receipt = document.getElementById('receiptPreview');
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Simple text-based download (creating a text file)
+            const receiptText = receipt.innerText;
+            const blob = new Blob([receiptText], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'mcdonalds_receipt.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Auto-generate receipt on form changes
+        document.addEventListener('input', generateReceipt);
+        
+        // Initial generation
+        generateReceipt();
+    </script>
+</body>
+</html>
