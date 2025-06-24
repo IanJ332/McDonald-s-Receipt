@@ -291,7 +291,9 @@
                     
                     <div class="receipt-total">
                         <div class="receipt-item"><span>Subtotal:</span><span id="subtotal">$0.00</span></div>
-                        <div class="receipt-item"><span>Discount:</span><span id="discountAmount">$0.00</span></div>
+                        <div class="receipt-item" id="receiptTotalDiscountLine">
+                            <span>Discount:</span><span id="discountAmount">$0.00</span>
+                        </div>
                         <div class="receipt-item"><span>Tax:</span><span id="taxAmount">$0.00</span></div>
                         <div class="receipt-item" style="font-size: 1.2em;"><span>TOTAL:</span><span id="total">$0.00</span></div>
                     </div>
@@ -331,9 +333,13 @@
             // Add default items
             addItem('Big Mac', 1, 5.99);
             addItem('Large Fries', 1, 2.99);
+            addItem('Coke', 1, 1.99);
 
             // Set up event listeners
+            document.getElementById('itemsContainer').addEventListener('input', generateReceipt);
+            document.getElementById('discountsContainer').addEventListener('input', generateReceipt);
             document.querySelector('.form-section').addEventListener('input', generateReceipt);
+
             document.getElementById('deliveryToggle').addEventListener('change', (e) => {
                 document.getElementById('deliveryDetails').style.display = e.target.checked ? 'block' : 'none';
                 generateReceipt();
@@ -423,24 +429,44 @@
             const discountsContainer = document.getElementById('receiptDiscounts');
             discountsContainer.innerHTML = '';
             let totalDiscount = 0;
+            let discountLines = '';
+
             document.querySelectorAll('#discountsContainer .item-row').forEach(row => {
                 const inputs = row.querySelectorAll('input');
-                const discountName = inputs[0].value;
+                const discountName = inputs[0].value.trim();
                 const discountAmount = parseFloat(inputs[1].value) || 0;
                 if (discountName && discountAmount > 0) {
                     totalDiscount += discountAmount;
-                    discountsContainer.innerHTML += `<div class="receipt-item"><span>${discountName}</span><span>-$${discountAmount.toFixed(2)}</span></div>`;
+                    discountLines += `<div class="receipt-item"><span>- ${discountName}</span><span>-$${discountAmount.toFixed(2)}</span></div>`;
                 }
             });
+
+            if (discountLines) {
+                discountsContainer.innerHTML = `<div style="font-weight: bold;">Discount:</div>${discountLines}`;
+            }
+
 
             // 5. Totals
             const taxableAmount = subtotal - totalDiscount;
             const tax = taxableAmount > 0 ? (taxableAmount * taxRate) / 100 : 0;
             const total = taxableAmount + tax;
             document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
-            document.getElementById('discountAmount').textContent = `-$${totalDiscount.toFixed(2)}`;
+            // document.getElementById('discountAmount').textContent = `-$${totalDiscount.toFixed(2)}`;
             document.getElementById('taxAmount').textContent = `$${tax.toFixed(2)}`;
             document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+            
+            // Get the element that wraps the discount line in the receipt totals section
+            // You'll need to add an ID to this specific div in your HTML
+            const discountTotalLine = document.getElementById('receiptTotalDiscountLine');
+            if (discountTotalLine) {
+                if (totalDiscount > 0) {
+                    discountTotalLine.style.display = 'flex';
+                    document.getElementById('discountAmount').textContent = `-$${totalDiscount.toFixed(2)}`;
+                } else {
+                    discountTotalLine.style.display = 'none';
+                }
+            }
+
 
             // 6. Delivery Section
             const deliverySection = document.getElementById('receiptDeliverySection');
