@@ -1,0 +1,157 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enhanced McDonald's Receipt Generator</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="container">
+        <!-- header -->
+        <div class="header">
+            <h1>🍟 Enhanced Receipt Generator</h1>
+            <p>Create highly customized, realistic receipts for any occasion</p>
+        </div>
+
+        <!-- main content -->
+        <div class="main-content">
+            <!-- left: form section -->
+            <div class="form-section">
+                <h2>📝 Customize Your Receipt</h2>
+
+                <!-- form inputs -->
+                <div class="form-group">
+                    <label for="theme">Theme:</label>
+                    <select id="theme">
+                        <option value="none">None</option>
+                        <option value="puppy">Happy Puppy</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="storeName">Store Name:</label>
+                    <input type="text" id="storeName" value="McDonald's" />
+                </div>
+
+                <div class="form-group">
+                    <label for="storeCode">Store Code:</label>
+                    <input type="text" id="storeCode" value="1234" />
+                </div>
+
+                <div class="form-group">
+                    <label for="storeAddress">Store Address:</label>
+                    <input type="text" id="storeAddress" value="10207 Lakewood Blvd, Downey" />
+                </div>
+
+                <div class="form-group">
+                    <label for="pickupCode">Pickup Code (4 digits):</label>
+                    <input type="text" id="pickupCode" maxlength="4" />
+                </div>
+
+                <div class="form-group">
+                    <label for="orderNumber">Order Number:</label>
+                    <input type="text" id="orderNumber" />
+                </div>
+
+                <div class="form-group">
+                    <label for="cashierName">Cashier Name:</label>
+                    <input type="text" id="cashierName" value="Ronald McDonald" />
+                </div>
+
+                <div class="form-group">
+                    <label for="dateTime">Date & Time:</label>
+                    <input type="text" id="dateTime" />
+                </div>
+
+                <!-- items -->
+                <div class="items-section">
+                    <h3>🍔 Menu Items</h3>
+                    <div id="itemsContainer"></div>
+                    <button class="add-item-btn" onclick="addItem()">+ Add Item</button>
+                </div>
+
+                <!-- discounts -->
+                <div class="items-section">
+                    <h3>💸 Discounts</h3>
+                    <div id="discountsContainer"></div>
+                    <button class="add-discount-btn" onclick="addDiscount()">+ Add Discount</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="tax">Tax Rate (%):</label>
+                    <input type="number" id="tax" value="8.25" step="0.01" min="0" />
+                </div>
+
+                <div class="form-group">
+                    <label for="note">Note (Optional):</label>
+                    <textarea id="note" rows="3" placeholder="e.g., Happy Birthday!"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label><input type="checkbox" id="deliveryToggle" /> Add Delivery Info</label>
+                    <div id="deliveryDetails">
+                        <label for="deliveryName">Name:</label>
+                        <input type="text" id="deliveryName" placeholder="John Doe" />
+                        <label for="deliveryAddress">Address:</label>
+                        <input type="text" id="deliveryAddress" placeholder="123 Main St" />
+                        <label for="deliveryPhone">Phone:</label>
+                        <input type="text" id="deliveryPhone" placeholder="555-123-4567" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- right: receipt preview -->
+            <div class="receipt-section">
+                <div class="receipt" id="receiptPreview">
+                    <div id="receiptThemeImageContainer"></div>
+
+                    <div class="receipt-header">
+                        <div id="receiptStoreName" style="font-size: 1.5em; font-weight: bold;">McDonald's</div>
+                        <div id="receiptStoreCode">Restaurant #1234</div>
+                        <div id="receiptStoreAddress">10207 Lakewood Blvd, Downey</div>
+                    </div>
+
+                    <div id="receiptPickupCode" class="receipt-pickup-code">0816</div>
+
+                    <div>Cashier: <span id="receiptCashierName"></span></div>
+                    <div>Date: <span id="receiptDateTime"></span></div>
+                    <div>Order Number: <span id="receiptOrderNumber"></span></div>
+
+                    <div class="receipt-separator"></div>
+
+                    <div id="receiptItems"></div>
+                    <div id="receiptDiscounts"></div>
+
+                    <div class="receipt-separator"></div>
+
+                    <div class="receipt-total">
+                        <div class="receipt-item"><span>Subtotal:</span><span id="subtotal">$0.00</span></div>
+                        <div class="receipt-item" id="receiptTotalDiscountLine">
+                            <span>Discount:</span><span id="discountAmount">$0.00</span>
+                        </div>
+                        <div class="receipt-item"><span>Tax:</span><span id="taxAmount">$0.00</span></div>
+                        <div class="receipt-item" style="font-size: 1.2em;"><span>TOTAL:</span><span id="total">$0.00</span></div>
+                    </div>
+
+                    <div id="receiptDeliverySection"></div>
+
+                    <div class="receipt-separator"></div>
+
+                    <div class="receipt-footer">
+                        <div id="receiptNote" style="font-weight: bold;"></div>
+                        <div>Thank you for your order!</div>
+                    </div>
+                </div>
+
+                <button class="download-btn" onclick="downloadReceipt()">💾 Download Receipt as PNG</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Your Script -->
+    <script src="script.js"></script>
+</body>
+</html>

@@ -179,6 +179,35 @@
             margin-top: 15px;
             border: none;
         }
+        .delivery-row {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            background-color: #f1f1f1;
+            margin-top: 10px;
+        }
+        .delivery-row label {
+            font-weight: bold;
+        }
+        .delivery-row input {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        .remove-delivery-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: fit-content;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -259,18 +288,11 @@
                     <textarea id="note" rows="3" placeholder="e.g., Happy Birthday!"></textarea>
                 </div>
 
-                <div class="form-group">
-                    <label><input type="checkbox" id="deliveryToggle"> Add Delivery Info</label>
-                    <div id="deliveryDetails">
-                        <label for="deliveryName">Name:</label>
-                        <input type="text" id="deliveryName" placeholder="John Doe">
-                        <label for="deliveryAddress">Address:</label>
-                        <input type="text" id="deliveryAddress" placeholder="123 Main St">
-                        <label for="deliveryPhone">Phone:</label>
-                        <input type="text" id="deliveryPhone" placeholder="555-123-4567">
-                    </div>
+                <div class="items-section">
+                    <h3>📦 Delivery Info</h3>
+                    <div id="deliveryContainer"></div>
+                    <button class="add-discount-btn" onclick="addDelivery()">+ Add Recipient</button>
                 </div>
-
             </div>
 
             <div class="receipt-section">
@@ -385,6 +407,49 @@
             generateReceipt();
         }
 
+        function addDelivery() {
+            const container = document.getElementById('deliveryContainer');
+            const addButton = document.querySelector('.add-discount-btn[onclick="addDelivery()"]');
+
+            // prevent duplicate
+            if (container.children.length > 0) return;
+
+            const deliveryDiv = document.createElement('div');
+            deliveryDiv.className = 'delivery-row';
+            deliveryDiv.innerHTML = `
+                <label for="deliveryName">Name:</label>
+                <input type="text" id="deliveryName" placeholder="John Doe">
+
+                <label for="deliveryAddress">Address:</label>
+                <input type="text" id="deliveryAddress" placeholder="123 Main St">
+
+                <label for="deliveryPhone">Phone:</label>
+                <input type="text" id="deliveryPhone" placeholder="555-123-4567">
+
+                <button class="remove-delivery-btn" onclick="removeDelivery()">✕ Remove</button>
+            `;
+            container.appendChild(deliveryDiv);
+
+            // hide the add button
+            if (addButton) addButton.style.display = 'none';
+
+            generateReceipt();
+        }
+
+        function removeDelivery() {
+            const container = document.getElementById('deliveryContainer');
+            const addButton = document.querySelector('.add-discount-btn[onclick="addDelivery()"]');
+
+            // clear delivery list
+            container.innerHTML = '';
+
+            // recover “+ Add Recipient” button
+            if (addButton) addButton.style.display = 'inline-block';
+
+            generateReceipt();
+        }
+
+
         // --- RECEIPT GENERATION ---
         function generateReceipt() {
             const theme = document.getElementById('theme').value;
@@ -492,8 +557,9 @@
             // 6. Delivery Section
             const deliverySection = document.getElementById('receiptDeliverySection');
             deliverySection.innerHTML = '';
-            if (document.getElementById('deliveryToggle').checked) {
-                const name = document.getElementById('deliveryName').value;
+            const deliveryNameInput = document.getElementById('deliveryName');
+            if (deliveryNameInput) {
+                const name = deliveryNameInput.value;
                 const address = document.getElementById('deliveryAddress').value;
                 const phone = document.getElementById('deliveryPhone').value;
                 deliverySection.innerHTML = `<div class="receipt-separator"></div><div style="font-weight: bold;">Delivery To:</div><div>${name}</div><div>${address}</div><div>${phone}</div>`;

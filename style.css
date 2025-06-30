@@ -1,0 +1,222 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.header {
+    background: #ffcc02;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+}
+
+.header h1 {
+    color: #d63031;
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.header p {
+    color: #2d3436;
+    font-size: 1.1em;
+}
+
+.main-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 30px;
+}
+
+.form-section {
+    flex: 1;
+    min-width: 300px;
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 15px;
+    border: 2px solid #e9ecef;
+}
+
+.form-section h2 {
+    color: #2d3436;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    border-bottom: 2px solid #ffcc02;
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2d3436;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #ff6b35;
+}
+
+.items-section {
+    border: 2px dashed #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.item-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.item-row input[type="text"] {
+    flex: 2;
+}
+
+.item-row input[type="number"] {
+    flex: 1;
+}
+
+.remove-item-btn,
+.remove-discount-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1;
+    width: 30px;
+    height: 30px;
+}
+
+.add-item-btn,
+.add-discount-btn {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.receipt-section {
+    flex: 1;
+    min-width: 350px;
+    max-width: 400px;
+}
+
+.receipt {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 20px;
+    width: 350px;
+    margin: 0 auto;
+}
+
+.receipt-header-image {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.receipt-header-image img {
+    max-width: 80%;
+    height: auto;
+    object-fit: contain;
+}
+
+.receipt-header {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.receipt-pickup-code {
+    font-size: 2.5em;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.receipt-separator {
+    border-top: 1px dashed #333;
+    margin: 10px 0;
+}
+
+.receipt-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.receipt-total {
+    font-weight: bold;
+}
+
+.receipt-footer {
+    text-align: center;
+    margin-top: 15px;
+}
+
+#deliveryDetails {
+    display: none;
+    margin-top: 15px;
+}
+
+.download-btn {
+    background: #007bff;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 15px;
+    border: none;
+}
