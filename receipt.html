@@ -133,6 +133,7 @@
       top: 20px;
       width: 350px;
       margin: 0 auto;
+      transition: all 0.3s ease;
     }
     .receipt-header-image {
       text-align: center;
@@ -141,6 +142,7 @@
     .receipt-header-image img {
       max-width: 80%;
       height: auto;
+      transition: all 0.3s ease;
     }
     .receipt-header { text-align: center; margin-bottom: 10px; }
     .receipt-pickup-code {
@@ -207,6 +209,27 @@
       font-size: 12px;
     }
 
+    /* Theme-based styling */
+    .receipt.theme-puppy {
+      background: linear-gradient(135deg, #fff9e6, #ffe6cc);
+      border: 2px solid #ff9900;
+    }
+    
+    .receipt.theme-christmas {
+      background: linear-gradient(135deg, #f0fff0, #e6ffe6);
+      border: 2px solid #228b22;
+    }
+    
+    .receipt.theme-valentine {
+      background: linear-gradient(135deg, #ffe6f0, #ffd6e6);
+      border: 2px solid #ff1493;
+    }
+    
+    .receipt.theme-halloween {
+      background: linear-gradient(135deg, #fff5e6, #ffe6cc);
+      border: 2px solid #ff6600;
+    }
+
     @media (max-width: 768px) {
       .main-content {
         flex-direction: column;
@@ -262,6 +285,18 @@
           <input type="text" id="dateTime">
         </div>
         <div class="form-group">
+          <label for="theme">Theme:</label>
+          <select id="theme">
+            <option value="none">None (Original)</option>
+            <option value="puppy">🐶 Happy Puppy</option>
+            <option value="christmas">🎄 Christmas Special</option>
+            <option value="valentine">💝 Valentine's Day</option>
+            <option value="halloween">🎃 Halloween</option>
+            <option value="birthday">🎂 Birthday</option>
+            <option value="summer">☀️ Summer Fun</option>
+          </select>
+        </div>
+        <div class="form-group">
           <label for="note">Note (Optional):</label>
           <textarea id="note" rows="3"></textarea>
         </div>
@@ -293,7 +328,7 @@
       <div class="receipt-section">
         <div class="receipt" id="receiptPreview">
           <div class="receipt-header-image">
-            <img src="./src/mc_logo.png" alt="McDonald's Logo" />
+            <img src="./src/mc_logo.png" alt="McDonald's Logo" id="themeImage" />
           </div>
           <div class="receipt-header">
             <div id="receiptStoreName" style="font-weight: bold;">McDonald's</div>
@@ -318,7 +353,7 @@
           <div class="receipt-separator"></div>
           <div class="receipt-footer">
             <div id="receiptNote"></div>
-            <div>Thank you for your order!</div>
+            <div id="themeMessage">Thank you for your order!</div>
           </div>
         </div>
         <button class="download-btn" onclick="downloadReceipt()">💾 Download Receipt as PNG</button>
@@ -331,43 +366,126 @@
     let customImageData = '';
     let customImageVisible = true;
 
+    // Theme configuration
+    const themes = {
+      none: {
+        image: './src/mc_logo.png',
+        alt: "McDonald's Logo",
+        className: '',
+        message: 'Thank you for your order!'
+      },
+      puppy: {
+        image: './src/mc_puppy.png',
+        alt: "Happy Puppy McDonald's",
+        className: 'theme-puppy',
+        message: 'Have a paw-some day! 🐶'
+      },
+      christmas: {
+        image: './src/mc_christmas.png',
+        alt: "Christmas McDonald's",
+        className: 'theme-christmas',
+        message: 'Merry Christmas and Happy Holidays! 🎄'
+      },
+      valentine: {
+        image: './src/mc_valentine.png',
+        alt: "Valentine's McDonald's",
+        className: 'theme-valentine',
+        message: 'Made with love! Happy Valentine\'s Day! 💝'
+      },
+      halloween: {
+        image: './src/mc_halloween.png',
+        alt: "Halloween McDonald's",
+        className: 'theme-halloween',
+        message: 'Have a spook-tacular day! 🎃'
+      },
+      birthday: {
+        image: './src/mc_birthday.png',
+        alt: "Birthday McDonald's",
+        className: 'theme-birthday',
+        message: 'Happy Birthday! Make it a special day! 🎂'
+      },
+      summer: {
+        image: './src/mc_summer.png',
+        alt: "Summer McDonald's",
+        className: 'theme-summer',
+        message: 'Enjoy your summer treats! ☀️'
+      }
+    };
+
     function initialize() {
       const now = new Date();
       document.getElementById('pickupCode').value = Math.floor(1000 + Math.random() * 9000);
       document.getElementById('orderNumber').value = Date.now();
       document.getElementById('dateTime').value = now.toISOString().slice(0, 16).replace('T', ' ');
+      document.getElementById('theme').addEventListener('change', updateTheme);
 
       addItem('Big Mac', 1, 5.99);
       addItem('Fries', 1, 2.99);
       addItem('Coke', 1, 1.99);
       generateReceipt();
+      updateTheme();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
       initialize();
 
-    document.getElementById('customImage').addEventListener('change', function () {
-    const file = this.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-        customImageData = e.target.result;
-        customImageVisible = true;
-        document.getElementById('imageActionButtons').style.display = 'block';
-        generateReceipt();
-        };
-        reader.readAsDataURL(file);
-    } else {
-        customImageData = '';
-        customImageVisible = false;
-        document.getElementById('imageActionButtons').style.display = 'none';
-        generateReceipt();
-    }
-    });
-
+      document.getElementById('customImage').addEventListener('change', function () {
+        const file = this.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            customImageData = e.target.result;
+            customImageVisible = true;
+            document.getElementById('imageActionButtons').style.display = 'block';
+            generateReceipt();
+          };
+          reader.readAsDataURL(file);
+        } else {
+          customImageData = '';
+          customImageVisible = false;
+          document.getElementById('imageActionButtons').style.display = 'none';
+          generateReceipt();
+        }
+      });
 
       document.querySelector('.form-section').addEventListener('input', generateReceipt);
     });
+
+    function updateTheme() {
+      const themeSelect = document.getElementById('theme');
+      const selectedTheme = themeSelect.value;
+      const themeConfig = themes[selectedTheme] || themes.none;
+      
+      // Update image
+      const imageElement = document.getElementById('themeImage');
+      imageElement.src = themeConfig.image;
+      imageElement.alt = themeConfig.alt;
+      
+      // Update receipt styling
+      const receiptElement = document.getElementById('receiptPreview');
+      
+      // Remove all theme classes
+      Object.values(themes).forEach(theme => {
+        if (theme.className) {
+          receiptElement.classList.remove(theme.className);
+        }
+      });
+      
+      // Add current theme class
+      if (themeConfig.className) {
+        receiptElement.classList.add(themeConfig.className);
+      }
+      
+      // Update theme message
+      document.getElementById('themeMessage').textContent = themeConfig.message;
+      
+      // Handle image load error (fallback to default)
+      imageElement.onerror = function() {
+        console.warn(`Theme image not found: ${themeConfig.image}, falling back to default`);
+        this.src = './src/mc_logo.png';
+        this.alt = "McDonald's Logo";
+      };
+    }
 
     function addItem(name = '', qty = 1, price = 0.00) {
       const row = document.createElement('div');
@@ -499,16 +617,17 @@
         link.click();
       });
     }
+
     function cancelImage() {
-        customImageVisible = false;
-        generateReceipt();
+      customImageVisible = false;
+      generateReceipt();
     }
 
     function redoImage() {
-    if (customImageData) {
-            customImageVisible = true;
-            generateReceipt();
-        }
+      if (customImageData) {
+        customImageVisible = true;
+        generateReceipt();
+      }
     }
   </script>
 </body>
